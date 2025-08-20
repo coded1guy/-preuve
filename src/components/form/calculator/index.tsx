@@ -25,8 +25,6 @@ const LoanCalculatorForm = () => {
   const [canCalc, setCanCalc] = useState(false);
   const calculate = useCalculatorStore((state) => state.setCalcDetails);
 
-  console.log(formData);
-
   useEffect(() => {
     const { amount, rate, duration, type, fees, vat } = formData;
 
