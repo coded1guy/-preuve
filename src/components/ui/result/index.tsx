@@ -10,8 +10,11 @@ const CalculatorResult = () => {
   const close = useCalculatorStore((state) => state.close);
 
   useEffect(() => {
-    if (show === true && window && typeof window.scrollTo === "function") {
+    if (show === true && document && window && typeof window.scrollTo === "function") {
       window.scrollTo(0, 0);
+      document.documentElement.classList.add("overflow-hidden");
+    } else {
+      document.documentElement.classList.remove("overflow-hidden");
     }
   }, [show]);
 
