@@ -23,7 +23,7 @@ type CalculatorState = {
 };
 
 const useCalculatorStore = create<CalculatorState>((set) => ({
-  show: true,
+  show: false,
   data: { amountGotten: 0, interest: 0, monthlyPayable: 0, totalPayable: 0 },
   setCalcDetails: (show, newData) => set({ show, data: { ...newData } }),
   close: () => set({ show: false }),
