@@ -60,7 +60,7 @@ const LoanCalculatorForm = () => {
       <TextInput
         id="duration"
         min="0"
-        label="duration (months):"
+        label="Duration (months):"
         type="number"
         onChange={(e) => {
           setFormData((data) => ({ ...data, duration: Number(e.target.value) }));
@@ -92,7 +92,7 @@ const LoanCalculatorForm = () => {
         </div> */}
 
       <SelectField
-        label="type"
+        label="Type"
         options={loanTypeOptions}
         onChange={(value) => {
           setFormData((data) => ({ ...data, type: value }));
@@ -102,7 +102,7 @@ const LoanCalculatorForm = () => {
       <TextInput
         id="fees"
         min="0"
-        label="fees and commission (naira):"
+        label="Fees and Commission (naira):"
         type="number"
         onChange={(e) => {
           setFormData((data) => ({
@@ -131,7 +131,7 @@ const LoanCalculatorForm = () => {
         disabled={!canCalc}
         className={`bg-[#dda15e] hover:bg-[#bc6c25] w-full h-12 text-lg cursor-pointer rounded-xl text-[#283618] disabled:opacity-50 disabled:cursor-not-allowed transition ease-in-out duration-300`}
       >
-        Calculate loan
+        Calculate Loan
       </Button>
     </form>
   );
