@@ -66,30 +66,6 @@ const LoanCalculatorForm = () => {
           setFormData((data) => ({ ...data, duration: Number(e.target.value) }));
         }}
       />
-      {/* <div>
-          <label>duration:</label>
-          <select>
-            <option></option>
-            <option value="days">days</option>
-            <option value="months">months</option>
-            <option value="years">years</option>
-          </select>
-          <input type="number" />
-        </div> */}
-
-      {/* <div>
-          <label>Start date:</label>
-          <input type="date" />
-        </div> */}
-
-      {/* <div>
-          <label>type:</label>
-          <select>
-            <option></option>
-            <option title="A loan where interest is calculated on the full original principal for the entire duration, regardless of repayments made.">flat Loan</option>
-            <option title="A loan repaid in equal installments where each payment covers both principal and interest, with interest calculated on the reducing balance." >amortized or declining balance loan</option>
-          </select>
-        </div> */}
 
       <SelectField
         label="Type"
