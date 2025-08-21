@@ -1,39 +1,47 @@
+import { formatNumber } from "@/lib/utils";
+
 const calculateLoan = ({
   type,
   amount,
-  fees,
-  vat,
   rate,
   duration,
+  fees,
+  vat,
 }: {
   type: string;
   amount: number;
-  fees: number;
-  vat: number;
   rate: number;
   duration: number;
+  fees: number;
+  vat: number;
 }) => {
   rate = rate / 100;
-  const amountGotten = amount - fees - vat;
+  const totalFees = fees + vat;
+  const amountGotten = amount - totalFees;
 
   if (type === "amortized") {
     rate = rate / 12;
     const raisedRate = (1 + rate) ** duration;
     const monthlyPayable = amount * ((rate * raisedRate) / (raisedRate - 1));
     const totalPayable = monthlyPayable * duration;
+    const totalLoanServiceFee = totalPayable - amountGotten + totalFees; // interest + fees + vat
     return {
-      amountGotten,
-      interest: totalPayable - amount,
-      monthlyPayable,
-      totalPayable,
+      amountGotten: formatNumber(`${amountGotten}`).forward(),
+      interest: formatNumber(`${totalPayable - amount}`).forward(),
+      monthlyPayable: formatNumber(`${monthlyPayable}`).forward(),
+      totalPayable: formatNumber(`${totalPayable}`).forward(),
+      apr: formatNumber(`${(totalLoanServiceFee / amount) * (12 / duration) * 100}`).forward(),
     };
   } else {
     const interest = amount * (duration / 12) * rate;
+    const totalPayable = amount + interest;
+    const totalLoanServiceFee = totalPayable - amountGotten + totalFees; // interest + fees + vat
     return {
-      amountGotten,
-      interest,
-      monthlyPayable: (amount + interest) / duration,
-      totalPayable: amount + interest,
+      amountGotten: formatNumber(`${amountGotten}`).forward(),
+      interest: formatNumber(`${interest}`).forward(),
+      monthlyPayable: formatNumber(`${totalPayable / duration}`).forward(),
+      totalPayable: formatNumber(`${totalPayable}`).forward(),
+      apr: formatNumber(`${(totalLoanServiceFee / amount) * (12 / duration) * 100}`).forward(),
     };
   }
 };

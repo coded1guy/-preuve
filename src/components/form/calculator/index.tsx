@@ -2,25 +2,26 @@ import Button from "@/components/ui/button";
 import SelectField from "@/components/ui/input/select-field";
 import TextInput from "@/components/ui/input/text-field";
 import { loanTypeOptions } from "@/constants/options";
+import { formatNumber } from "@/lib/utils";
 import calculateLoan from "@/service/calculator";
 import useCalculatorStore from "@/store/calculator.store";
 import { useEffect, useState } from "react";
 
 const LoanCalculatorForm = () => {
   const [formData, setFormData] = useState<{
-    amount: number;
-    rate: number;
-    duration: number;
+    amount: string;
+    rate: string;
+    duration: string;
     type: string;
-    fees: number;
-    vat: number;
+    fees: string;
+    vat: string;
   }>({
-    amount: 0,
-    rate: 0,
-    duration: 0,
+    amount: "",
+    rate: "",
+    duration: "",
     type: "",
-    fees: 0,
-    vat: 0,
+    fees: "",
+    vat: "",
   });
   const [canCalc, setCanCalc] = useState(false);
   const calculate = useCalculatorStore((state) => state.setCalcDetails);
@@ -28,7 +29,15 @@ const LoanCalculatorForm = () => {
   useEffect(() => {
     const { amount, rate, duration, type, fees, vat } = formData;
 
-    if (amount && rate && duration && type && fees && vat) {
+    if (
+      amount &&
+      rate &&
+      duration &&
+      type &&
+      fees &&
+      vat &&
+      [amount, rate, duration, fees, vat].every((v) => v !== "0")
+    ) {
       setCanCalc(true);
     } else {
       setCanCalc(false);
@@ -39,31 +48,85 @@ const LoanCalculatorForm = () => {
     <form className="space-y-3 pb-12 w-full max-w-[500px]">
       <TextInput
         id="amount"
-        min="0"
+        min=""
         label="Amount (Naira):"
-        type="number"
+        type="text"
+        value={formData.amount}
         onChange={(e) => {
-          setFormData((data) => ({ ...data, amount: Number(e.target.value) }));
+          setFormData((data) => ({
+            ...data,
+            amount: formatNumber(e.target.value).forward(),
+          }));
+
+          if (formData.fees) {
+            const { forward, backward } = formatNumber(
+              formatNumber(formData.fees).limitBy(e.target.value)
+            );
+            const numberValue = backward() ?? 0;
+            setFormData((data) => ({
+              ...data,
+              fees: forward(),
+              vat: formatNumber(`${0.075 * numberValue}`).forward(),
+            }));
+          }
+        }}
+        onBlur={(e) => {
+          const lastInput = formatNumber(e.target.value).dropIrrelevantZeros();
+
+          if (typeof lastInput === "string") {
+            setFormData((data) => ({
+              ...data,
+              amount: lastInput,
+            }));
+          }
         }}
       />
 
       <TextInput
         id="rate"
-        min="0"
+        min=""
         label="Rate (percent):"
-        type="number"
+        value={formData.rate}
+        type="text"
         onChange={(e) => {
-          setFormData((data) => ({ ...data, rate: Number(e.target.value) }));
+          setFormData((data) => ({
+            ...data,
+            rate: formatNumber(e.target.value).forward(),
+          }));
+        }}
+        onBlur={(e) => {
+          const lastInput = formatNumber(e.target.value).dropIrrelevantZeros();
+
+          if (typeof lastInput === "string") {
+            setFormData((data) => ({
+              ...data,
+              rate: lastInput,
+            }));
+          }
         }}
       />
 
       <TextInput
         id="duration"
-        min="0"
+        min=""
         label="Duration (months):"
-        type="number"
+        value={formData.duration}
+        type="text"
         onChange={(e) => {
-          setFormData((data) => ({ ...data, duration: Number(e.target.value) }));
+          setFormData((data) => ({
+            ...data,
+            duration: formatNumber(e.target.value).forward(),
+          }));
+        }}
+        onBlur={(e) => {
+          const lastInput = formatNumber(e.target.value).dropIrrelevantZeros();
+
+          if (typeof lastInput === "string") {
+            setFormData((data) => ({
+              ...data,
+              duration: lastInput,
+            }));
+          }
         }}
       />
 
@@ -77,15 +140,30 @@ const LoanCalculatorForm = () => {
 
       <TextInput
         id="fees"
-        min="0"
+        min=""
         label="Fees and Commission (naira):"
-        type="number"
+        value={formData.fees}
+        type="text"
         onChange={(e) => {
+          const { forward, backward } = formatNumber(
+            formatNumber(e.target.value).limitBy(formData.amount)
+          );
+          const numberValue = backward() ?? 0;
           setFormData((data) => ({
             ...data,
-            fees: Number(e.target.value),
-            vat: 0.075 * Number(e.target.value),
+            fees: forward(),
+            vat: formatNumber(`${0.075 * numberValue}`).forward(),
           }));
+        }}
+        onBlur={(e) => {
+          const lastInput = formatNumber(e.target.value).dropIrrelevantZeros();
+
+          if (typeof lastInput === "string") {
+            setFormData((data) => ({
+              ...data,
+              fees: lastInput,
+            }));
+          }
         }}
       />
 
@@ -93,7 +171,7 @@ const LoanCalculatorForm = () => {
         id="vat"
         label="VAT (7.5%):"
         value={formData.vat}
-        type="number"
+        type="text"
         readOnly
         aria-readonly
       />
@@ -101,7 +179,14 @@ const LoanCalculatorForm = () => {
       <Button
         type="button"
         onClick={() => {
-          const result = calculateLoan(formData);
+          const result = calculateLoan({
+            type: formData.type,
+            amount: formatNumber(formData.amount).backward(),
+            rate: formatNumber(formData.rate).backward(),
+            duration: formatNumber(formData.duration).backward(),
+            fees: formatNumber(formData.fees).backward(),
+            vat: formatNumber(formData.vat).backward(),
+          });
           calculate(canCalc, result);
         }}
         disabled={!canCalc}

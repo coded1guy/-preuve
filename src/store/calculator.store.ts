@@ -1,10 +1,11 @@
 import { create } from "zustand";
 
 type CalculatorData = {
-  amountGotten: number;
-  interest: number;
-  monthlyPayable: number;
-  totalPayable: number;
+  amountGotten: string;
+  interest: string;
+  monthlyPayable: string;
+  totalPayable: string;
+  apr: string;
 };
 
 type CalculatorState = {
@@ -13,10 +14,11 @@ type CalculatorState = {
   setCalcDetails: (
     show: boolean,
     newData: {
-      amountGotten: number;
-      interest: number;
-      monthlyPayable: number;
-      totalPayable: number;
+      amountGotten: string;
+      interest: string;
+      monthlyPayable: string;
+      totalPayable: string;
+      apr: string;
     }
   ) => void;
   close: () => void;
@@ -24,7 +26,7 @@ type CalculatorState = {
 
 const useCalculatorStore = create<CalculatorState>((set) => ({
   show: false,
-  data: { amountGotten: 0, interest: 0, monthlyPayable: 0, totalPayable: 0 },
+  data: { amountGotten: "", interest: "", monthlyPayable: "", totalPayable: "", apr: "" },
   setCalcDetails: (show, newData) => set({ show, data: { ...newData } }),
   close: () => set({ show: false }),
 }));
