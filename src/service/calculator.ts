@@ -28,7 +28,7 @@ const calculateLoan = ({
     return {
       amountGotten: formatNumber(`${amountGotten}`).forward(),
       interest: formatNumber(`${totalPayable - amount}`).forward(),
-      totalFees,
+      totalFees: formatNumber(`${totalFees}`).forward(),
       monthlyPayable: formatNumber(`${monthlyPayable}`).forward(),
       totalPayable: formatNumber(`${totalPayable}`).forward(),
       apr: formatNumber(`${(totalLoanServiceFee / amount) * (12 / duration) * 100}`).forward(),
@@ -40,7 +40,7 @@ const calculateLoan = ({
     return {
       amountGotten: formatNumber(`${amountGotten}`).forward(),
       interest: formatNumber(`${interest}`).forward(),
-      totalFees,
+      totalFees: formatNumber(`${totalFees}`).forward(),
       monthlyPayable: formatNumber(`${totalPayable / duration}`).forward(),
       totalPayable: formatNumber(`${totalPayable}`).forward(),
       apr: formatNumber(`${(totalLoanServiceFee / amount) * (12 / duration) * 100}`).forward(),
