@@ -26,24 +26,28 @@ const calculateLoan = ({
     const totalPayable = monthlyPayable * duration;
     const totalLoanServiceFee = totalPayable - amountGotten + totalFees; // interest + fees + vat
     return {
-      amountGotten: formatNumber(`${amountGotten}`).forward(),
-      interest: formatNumber(`${totalPayable - amount}`).forward(),
-      totalFees: formatNumber(`${totalFees}`).forward(),
-      monthlyPayable: formatNumber(`${monthlyPayable}`).forward(),
-      totalPayable: formatNumber(`${totalPayable}`).forward(),
-      apr: formatNumber(`${(totalLoanServiceFee / amount) * (12 / duration) * 100}`).forward(),
+      amountGotten: formatNumber(`${amountGotten.toFixed(2)}`).forward(),
+      interest: formatNumber(`${(totalPayable - amount).toFixed(2)}`).forward(),
+      totalFees: formatNumber(`${totalFees.toFixed(2)}`).forward(),
+      monthlyPayable: formatNumber(`${monthlyPayable.toFixed(2)}`).forward(),
+      totalPayable: formatNumber(`${totalPayable.toFixed(2)}`).forward(),
+      apr: formatNumber(
+        `${((totalLoanServiceFee / amount) * (12 / duration) * 100).toFixed(2)}`
+      ).forward(),
     };
   } else {
     const interest = amount * (duration / 12) * rate;
     const totalPayable = amount + interest;
     const totalLoanServiceFee = totalPayable - amountGotten + totalFees; // interest + fees + vat
     return {
-      amountGotten: formatNumber(`${amountGotten}`).forward(),
-      interest: formatNumber(`${interest}`).forward(),
-      totalFees: formatNumber(`${totalFees}`).forward(),
-      monthlyPayable: formatNumber(`${totalPayable / duration}`).forward(),
-      totalPayable: formatNumber(`${totalPayable}`).forward(),
-      apr: formatNumber(`${(totalLoanServiceFee / amount) * (12 / duration) * 100}`).forward(),
+      amountGotten: formatNumber(`${amountGotten.toFixed(2)}`).forward(),
+      interest: formatNumber(`${interest.toFixed(2)}`).forward(),
+      totalFees: formatNumber(`${totalFees.toFixed(2)}`).forward(),
+      monthlyPayable: formatNumber(`${(totalPayable / duration).toFixed(2)}`).forward(),
+      totalPayable: formatNumber(`${totalPayable.toFixed(2)}`).forward(),
+      apr: formatNumber(
+        `${((totalLoanServiceFee / amount) * (12 / duration) * 100).toFixed(2)}`
+      ).forward(),
     };
   }
 };
