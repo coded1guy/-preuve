@@ -4,9 +4,8 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 
 const CalculatorResult = () => {
-  const { amountGotten, interest, monthlyPayable, totalPayable, apr } = useCalculatorStore(
-    (state) => state.data
-  );
+  const { amountGotten, interest, monthlyPayable, totalPayable, apr, totalFees } =
+    useCalculatorStore((state) => state.data);
   const show = useCalculatorStore((state) => state.show);
   const close = useCalculatorStore((state) => state.close);
 
@@ -42,6 +41,10 @@ const CalculatorResult = () => {
             <dd className="text-center">
               <h4 className="font-medium inline-block mr-1.5">Interest (naira):</h4>
               <span>{interest}</span>
+            </dd>
+            <dd className="text-center">
+              <h4 className="font-medium inline-block mr-1.5">Fees & VAT (naira):</h4>
+              <span>{totalFees}</span>
             </dd>
             <dd className="text-center font-bold">
               <h4 className="inline-block mr-1.5">Total payable (naira):</h4>
